@@ -11,7 +11,63 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
-  res.render('index',{title: "express"})
+  res.render('login')
+});
+
+app.get('/annapurna', function(req, res){
+  res.render('annapurna')
+});
+
+app.get('/bali', function(req, res){
+  res.render('bali')
+});
+
+app.get('/cities', function(req, res){
+  res.render('cities')
+});
+
+app.get('/hiking', function(req, res){
+  res.render('hiking')
+});
+
+app.get('/home', function(req, res){
+  res.render('home')
+});
+
+app.get('/inca', function(req, res){
+  res.render('inca')
+});
+
+app.get('/islands', function(req, res){
+  res.render('islands')
+});
+
+app.get('/login', function(req, res){
+  res.render('login')
+});
+
+app.get('/paris', function(req, res){
+  res.render('paris')
+});
+
+app.get('/registration', function(req, res){
+  res.render('registration')
+});
+
+app.get('/rome', function(req, res){
+  res.render('rome')
+});
+
+app.get('/santorini', function(req, res){
+  res.render('santorini')
+});
+
+app.get('/searchresults', function(req, res){
+  res.render('searchresults')
+});
+
+app.get('/wanttogo', function(req, res){
+  res.render('wanttogo')
 });
 
 app.listen(3000);
