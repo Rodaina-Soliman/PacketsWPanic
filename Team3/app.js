@@ -189,8 +189,6 @@ app.post('/search', function(req,res){
     }
   );
 
-  //Add to want to go list
-
   app.post('/add-to-wanttogo', function(req,res){
         const { username, destination } = req.body;
         db.collection("myCollection").findOne({username: username}).then(result => {
