@@ -34,14 +34,14 @@
         <h1>Registration</h1>
     </div>
     <div class="cont">
-        <form method='post' action='/registration'>
+        <form method="POST" action='/registration'>
             Username: <br>
             <input type="text" id="user" name="username"> <br>
             Password: <br>
             <input type="password" id="password" name="password"> <br> <br>
             <input type="submit" id="simple_click" class="btn btn-secondary" value="Register"> <br>
             <% if (error) { %>
-    <p style="color: red;"><%= error %></p> <% } %>
+                <p style="color: red;"><%= error %></p> <% } %>
         </form>
     </div>
 </body>

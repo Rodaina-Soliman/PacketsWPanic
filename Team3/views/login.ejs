@@ -32,7 +32,7 @@
         <h1>Welcome</h1>
     </div>
     <div class="cont">
-        <form action="/login" method="POST">
+        <form method="POST" action='/login'>
             Username:<br>
             <input type="text" name="username">
             <br>
@@ -41,9 +41,9 @@
             <br><br>
             <input type="submit" value="Login">
             <% if (error) { %>
-    <p style="color: red;"><%= error %></p> <% } %>
-<% if (success) { %>
-    <p style="color: green;"><%= success %></p> <% } %>
+                <p style="color: red;"><%= error %></p> <% } %>
+            <% if (success) { %>
+                <p style="color: green;"><%= success %></p> <% } %>
         </form>
         <br>
         <a href="registration">I dont have an account</a>
