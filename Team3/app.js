@@ -4,7 +4,6 @@ var session = require('express-session');
 const { MongoClient } = require('mongodb'); 
 var app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -51,14 +50,15 @@ app.post('/login', async function(req, res) {
     } catch (e) {
         res.send("Error: " + e.message);
     }
-});
+//Monogodb connection
 
-app.get('/annapurna', function(req, res){
-  res.render('annapurna')
-});
+const { MongoClient } = require('mongodb');
+const client = new MongoClient("mongodb://127.0.0.1:27017");
+client.connect();
+const db = client.db('myDB');
 
-app.get('/bali', function(req, res){
-  res.render('bali')
+app.get('/', function(req, res){
+  res.render('login')
 });
 
 app.get('/cities', function(req, res){
@@ -76,10 +76,6 @@ app.get('/home', function(req, res){
   res.render('home');
 });
 
-app.get('/inca', function(req, res){
-  res.render('inca')
-});
-
 app.get('/islands', function(req, res){
   res.render('islands')
 });
@@ -88,6 +84,10 @@ app.get('/paris', function(req, res){
   res.render('paris')
 });
 
+
+app.get('/login', function(req, res){
+  res.render('login')
+});
 
 app.get('/registration', function(req, res){
    res.render('registration', { error: null, success: null });
@@ -131,33 +131,32 @@ app.get('/wanttogo', function(req, res){
   res.render('wanttogo')
 });
 
-//Rana
 //Category Page gets 
 //gets from cities
 app.get('/paris', function(req,res){
-  res.render('paris');
+  res.render('paris', {e: 'false', m: null});
 })
 
 app.get('/rome', function(req,res){
-  res.render('rome');
+  res.render('rome', {e: 'false', m: null});
 })
 
 //gets from hiking
 app.get('/inca', function(req,res){
-  res.render('inca');
+  res.render('inca', {e: 'false', m: null});
 })
 
 app.get('/annapurna', function(req,res){
-  res.render('annapurna');
+  res.render('annapurna', {e: 'false', m: null});
 })
 
 //gets from islands
 app.get('/bali', function(req,res){
-  res.render('bali');
+  res.render('bali', {e: 'false', m: null});
 })
 
 app.get('/santorini', function(req,res){
-  res.render('santorini');
+  res.render('santorini', {e: 'false', m: null});
 })
 
 //Search 
@@ -184,6 +183,23 @@ app.post('/search', function(req,res){
     }
   );
 
+  //Add to want to go list
 
+  app.post('/add-to-wanttogo', function(req,res){
+        const { username, destination } = req.body;
+        db.collection("myCollection").findOne({username: username}).then(result => {
+          if (result.destinations.includes(destination)){
+            return res.render(destination.toLowerCase(), {e: 'true', m: 'Already in your list!'})
+          }
+          else{
+            db.collection("myCollection").updateOne(
+                    {username: username},
+                    {$addToSet: {destinations: destination}},
+                    {upsert: true}).then(() => {
+                    return res.render(destination.toLowerCase(), {e: 'true', m: 'Added to list!'});
+                });
+        }
+    });
+  });
 
 app.listen(3000);

@@ -77,12 +77,20 @@
         Rome today is one of the most important tourist destinations of the world, due to the incalculable immensity of its archaeological and art treasures, as well as for the charm of its unique traditions, the beauty of its panoramic views, and the majesty of its magnificent villas.
     </div>
     <div class="wanttogo">
+        <form id="addToWantToGoForm" method="POST" action="/add-to-wanttogo">
+            <input type="hidden" name="username" value="test">
+            <input type="hidden" name="destination" value="rome">
         <button id="wanttogo" class="btn btn-secondary ml-3">Add to Want-to-Go List</button>
     </div>
+    <script>
+    const shouldShowAlert = '<%= e === "true" ? "true" : "false" %>';
+    const alertMessage = '<%= m || "" %>';
+    if (shouldShowAlert && alertMessage) {
+        alert(alertMessage);
+    }
+</script>
     <div class="video">
-        <video width="480" height="360" controls>
-            <source src="/rome.mp4">
-        </video>
+        <iframe width="480" height="360" src="https://www.youtube.com/embed/MvXKBGTIImw" title="Super Simple Rome Travel Guide 2025: We Wish We&#39;d Have Known These 15 Things" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>s
 </body>
 </html>
