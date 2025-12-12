@@ -1,5 +1,7 @@
 var express = require('express');
 var path = require('path');
+var session = require('express-session'); 
+const { MongoClient } = require('mongodb'); 
 var app = express();
 var session = require('express-session');
 
@@ -9,13 +11,47 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+const mongoUrl = 'mongodb://localhost:27017';
+const client = new MongoClient(mongoUrl);
+const dbName = 'myDB';        
+const collectionName = 'myCollection'; 
+let collection;
+async function connectDB() {
+    try {
+        await client.connect();
+        console.log(">>> SUCCESS: Connected to MongoDB <<<");
+        const db = client.db(dbName);
+        collection = db.collection(collectionName);
+    } catch (err) {
+        console.error("Database Connection Error:", err);
+    }
+}
+connectDB();
+app.use(session({
+    secret: 'secretKey123',
+    resave: false,
+    saveUninitialized: true
+}));
+app.get('/login', function(req, res){
+    res.render('login', { error: null, success: null });
+});
+app.post('/login', async function(req, res) {
+    const { username, password } = req.body;
 
-//Monogodb connection
+    try {
+        const user = await collection.findOne({ username, password });
 
-const { MongoClient } = require('mongodb');
-const client = new MongoClient("mongodb://127.0.0.1:27017");
-client.connect();
-const db = client.db('myDB');
+        if (user) {
+            req.session.user = user;
+            return res.redirect('/home');
+        } else {
+            return res.render('login', { error: "Invalid username or password.", success: null });
+        }
+
+    } catch (e) {
+        res.send("Error: " + e.message);
+    }
+    });
 
 app.use(session({
     secret: 'secretKey123',
@@ -36,12 +72,20 @@ app.get('/hiking', function(req, res){
 });
 
 app.get('/home', function(req, res){
-  res.render('home')
+  if (!req.session.user) {
+       return res.redirect('/'); 
+  }
+  res.render('home');
 });
 
 app.get('/islands', function(req, res){
   res.render('islands')
 });
+
+app.get('/paris', function(req, res){
+  res.render('paris')
+});
+
 
 app.get('/login', function(req, res){
     res.render('login', { error: null, success: null });
