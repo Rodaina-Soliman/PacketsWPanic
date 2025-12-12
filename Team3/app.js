@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var app = express();
+var session = require('express-session');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -16,8 +17,14 @@ const client = new MongoClient("mongodb://127.0.0.1:27017");
 client.connect();
 const db = client.db('myDB');
 
+app.use(session({
+    secret: 'secretKey123',
+    resave: false,
+    saveUninitialized: true
+}));
+
 app.get('/', function(req, res){
-  res.render('login')
+  res.render('login', { error: null, success: null });
 });
 
 app.get('/cities', function(req, res){
@@ -37,11 +44,45 @@ app.get('/islands', function(req, res){
 });
 
 app.get('/login', function(req, res){
-  res.render('login')
+    res.render('login', { error: null, success: null });
 });
 
+app.post('/login', function(req, res) {
+    const { username, password } = req.body;
+    if (!username || !password) {
+        return res.render('login', { error: "Fields cannot be empty.", success: null });
+    }
+    db.collection("myCollection").findOne({username: username, password: password}).then(result => {
+        if (result && result.username && result.password) {
+            req.session.user = username;
+            return res.redirect('/home');
+        } else {
+            return res.render('login', { error: "Invalid username or password.", success: null });
+        }
+      });
+ });
+
 app.get('/registration', function(req, res){
-  res.render('registration')
+  res.render('registration', { error: null, success: null });
+});
+
+app.post('/registration', function(req, res){
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+        return res.render('registration', { error: "Fields cannot be empty.", success: null });
+    }
+
+  db.collection("myCollection").findOne({username: username}).then(result => {
+    if (result && result.username){
+      return res.render('registration', { error: "Username already taken.", success: null });
+    }
+    else {
+      db.collection("myCollection").insertOne({username: username, password: password, destinations: []});
+  res.render('login', { error: null, success: "Registration successful! Please log in." });
+    }
+  });
+    
 });
 
 app.get('/searchresults', function(req, res){
