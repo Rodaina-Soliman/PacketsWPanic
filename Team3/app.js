@@ -50,12 +50,7 @@ app.post('/login', async function(req, res) {
     } catch (e) {
         res.send("Error: " + e.message);
     }
-//Monogodb connection
-
-const { MongoClient } = require('mongodb');
-const client = new MongoClient("mongodb://127.0.0.1:27017");
-client.connect();
-const db = client.db('myDB');
+    });
 
 app.get('/', function(req, res){
   res.render('login')
