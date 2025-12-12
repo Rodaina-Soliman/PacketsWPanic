@@ -38,5 +38,25 @@
             </form>
         </div>
     </nav>
+
+    <%#search functionality %>
+
+    <div class="container mt-4">
+    <% if (!notFound) { %>
+  <ul class="list-group">
+    <% results.forEach(dest => { %>
+      <li class="list-group-item">
+        <a href="/<%= dest %>"><%= dest.charAt(0).toUpperCase() + dest.slice(1) %></a>
+      </li>
+    <% }) %>
+  </ul>
+<% } else { %>
+  <p class="text-danger">Destination not found</p>
+<% } %>
+
+
+</div>
+
+
 </body>
 </html>

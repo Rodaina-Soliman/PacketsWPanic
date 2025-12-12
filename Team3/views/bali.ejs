@@ -77,12 +77,20 @@
         Also known as the Land of the Gods, Bali appeals through its sheer natural beauty of looming volcanoes and lush terraced rice fields that exude peace and serenity. It is also famous for surfers' paradise.
     </div>
     <div class="wanttogo">
+        <form id="addToWantToGoForm" method="POST" action="/add-to-wanttogo">
+            <input type="hidden" name="username" value="test">
+            <input type="hidden" name="destination" value="bali">
         <button id="wanttogo" class="btn btn-secondary ml-3">Add to Want-to-Go List</button>
     </div>
+    <script>
+    const shouldShowAlert = '<%= e === "true" ? "true" : "false" %>';
+    const alertMessage = '<%= m || "" %>';
+    if (shouldShowAlert && alertMessage) {
+        alert(alertMessage);
+    }
+</script>
     <div class="video">
-        <video width="480" height="360" controls>
-            <source src="/bali.mp4">
-        </video>
+        <iframe width="480" height="360" src="https://www.youtube.com/embed/iy9pAtHlqv0" title="Best Things To Do in Bali - Not Your Typical Travel Guide" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
 
 </body>
