@@ -1,5 +1,7 @@
 var express = require('express');
 var path = require('path');
+var session = require('express-session'); 
+const { MongoClient } = require('mongodb'); 
 var app = express();
 
 // view engine setup
@@ -9,9 +11,46 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+const mongoUrl = 'mongodb://localhost:27017';
+const client = new MongoClient(mongoUrl);
+const dbName = 'myDB';        
+const collectionName = 'myCollection'; 
+let collection;
+async function connectDB() {
+    try {
+        await client.connect();
+        console.log(">>> SUCCESS: Connected to MongoDB <<<");
+        const db = client.db(dbName);
+        collection = db.collection(collectionName);
+    } catch (err) {
+        console.error("Database Connection Error:", err);
+    }
+}
+connectDB();
+app.use(session({
+    secret: 'secretKey123',
+    resave: false,
+    saveUninitialized: true
+}));
+app.get('/login', function(req, res){
+    res.render('login', { error: null, success: null });
+});
+app.post('/login', async function(req, res) {
+    const { username, password } = req.body;
 
-app.get('/', function(req, res){
-  res.render('login')
+    try {
+        const user = await collection.findOne({ username, password });
+
+        if (user) {
+            req.session.user = user;
+            return res.redirect('/home');
+        } else {
+            return res.render('login', { error: "Invalid username or password.", success: null });
+        }
+
+    } catch (e) {
+        res.send("Error: " + e.message);
+    }
 });
 
 app.get('/annapurna', function(req, res){
@@ -31,7 +70,10 @@ app.get('/hiking', function(req, res){
 });
 
 app.get('/home', function(req, res){
-  res.render('home')
+  if (!req.session.user) {
+       return res.redirect('/'); 
+  }
+  res.render('home');
 });
 
 app.get('/inca', function(req, res){
@@ -42,18 +84,37 @@ app.get('/islands', function(req, res){
   res.render('islands')
 });
 
-app.get('/login', function(req, res){
-  res.render('login')
-});
-
 app.get('/paris', function(req, res){
   res.render('paris')
 });
 
+
 app.get('/registration', function(req, res){
-  res.render('registration')
+   res.render('registration', { error: null, success: null });
 });
 
+app.post('/registration', async function(req, res) {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.render('registration', { error: "Fields cannot be empty.", success: null });
+    }
+
+    try {
+        const existing = await collection.findOne({ username });
+
+        if (existing) {
+            return res.render('registration', { error: "Username already taken.", success: null });
+        }
+
+        await collection.insertOne({ username, password, wantToGoList: [] });
+
+        res.render('login', { error: null, success: "Registration successful! Please log in." });
+
+    } catch (e) {
+        res.send("Error: " + e.message);
+    }
+});
 app.get('/rome', function(req, res){
   res.render('rome')
 });
