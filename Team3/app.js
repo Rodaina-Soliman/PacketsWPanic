@@ -53,7 +53,7 @@ app.post('/login', async function(req, res) {
     });
 
 app.get('/', function(req, res){
-  res.render('login')
+    res.render('login', { error: null, success: null });
 });
 
 app.get('/cities', function(req, res){
@@ -81,7 +81,7 @@ app.get('/paris', function(req, res){
 
 
 app.get('/login', function(req, res){
-  res.render('login')
+    res.render('login', { error: null, success: null });
 });
 
 app.get('/registration', function(req, res){
