@@ -36,6 +36,23 @@
             text-align: center;
             width: 100%;
         }
+
+        .destinations-container {
+            position: relative;
+            top: 120px;
+            left: 50px;
+        }
+
+        .destination {
+            position: absolute;
+            text-align: center;
+            color: white;
+        }
+
+        .destination label {
+            -webkit-text-stroke: 0.5px black;
+        }
+
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,6 +79,7 @@
             <a href="/login" class="btn btn-outline-primary my-2 my-sm-0 ml-2">Log Out</a>
         </div>
     </nav>
+
     <div class="destinations-container">
 
     <% if (destinations.length === 0) { %>
@@ -85,6 +103,8 @@
     <% }) %>
 
 </div>
+
+
     <div class="back-button-container">
         <a href="home" class="btn btn-secondary ml-3">Home</a>
     </div>
