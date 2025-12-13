@@ -96,29 +96,29 @@ app.get('/wanttogo', function(req, res){
 //Category Page gets 
 //gets from cities
 app.get('/paris', function(req,res){
-  res.render('paris', {e: 'false', m: null});
+  res.render('paris', {error: null, success: null});
 })
 
 app.get('/rome', function(req,res){
-  res.render('rome', {e: 'false', m: null});
+  res.render('rome', {error: null, success: null});
 })
 
 //gets from hiking
 app.get('/inca', function(req,res){
-  res.render('inca', {e: 'false', m: null});
+  res.render('inca', {error: null, success: null});
 })
 
 app.get('/annapurna', function(req,res){
-  res.render('annapurna', {e: 'false', m: null});
+  res.render('annapurna', {error: null, success: null});
 })
 
 //gets from islands
 app.get('/bali', function(req,res){
-  res.render('bali', {e: 'false', m: null});
+  res.render('bali', {error: null, success: null});
 })
 
 app.get('/santorini', function(req,res){
-  res.render('santorini', {e: 'false', m: null});
+  res.render('santorini', {error: null, success: null});
 })
 
 //Search 
@@ -148,20 +148,21 @@ app.post('/search', function(req,res){
   //Add to want to go list
 
   app.post('/add-to-wanttogo', function(req,res){
-        const { username, destination } = req.body;
-        db.collection("myCollection").findOne({username: username}).then(result => {
-          if (result.destinations.includes(destination)){
-            return res.render(destination.toLowerCase(), {e: 'true', m: 'Already in your list!'})
-          }
-          else{
-            db.collection("myCollection").updateOne(
-                    {username: username},
-                    {$addToSet: {destinations: destination}},
-                    {upsert: true}).then(() => {
-                    return res.render(destination.toLowerCase(), {e: 'true', m: 'Added to list!'});
-                });
-        }
-    });
+    const username = req.session.user;
+    const {destination } = req.body;
+    db.collection("myCollection").findOne({username: username}).then(result => {
+      if (result.destinations.includes(destination)){
+        return res.render(destination.toLowerCase(), {error: 'Already in your list!', success: null})
+      }
+      else{
+        db.collection("myCollection").updateOne(
+                {username: username},
+                {$addToSet: {destinations: destination}},
+                {upsert: true}).then(() => {
+                return res.render(destination.toLowerCase(), {error: null, success: 'Added to list!'});
+            });
+      }
   });
+});
 
 app.listen(3000);

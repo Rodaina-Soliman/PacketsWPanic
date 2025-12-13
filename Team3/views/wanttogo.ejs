@@ -13,6 +13,14 @@
             text-align: center;
             -webkit-text-stroke: 1px blue;
         }
+        .back-button-container {
+            position: fixed;
+            bottom: 50px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            width: 100%;
+        }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +44,11 @@
                     aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+            <a href="/login" class="btn btn-outline-primary my-2 my-sm-0 ml-2">Log Out</a>
         </div>
     </nav>
+    <div class="back-button-container">
+        <a href="home" class="btn btn-secondary ml-3">Home</a>
+    </div>
 </body>
 </html>
