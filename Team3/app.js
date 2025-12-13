@@ -44,21 +44,30 @@ app.get('/', function(req, res){
 });
 
 app.get('/cities', function(req, res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('cities')
 });
 
 app.get('/hiking', function(req, res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('hiking')
 });
 
 app.get('/home', function(req, res){
   if (!req.session.user) {
-       return res.redirect('/'); 
-  }
-  res.render('home');
+       return res.render('login', { error: "Please Login first", success: null });
+    }
+  res.render('home')
 });
 
 app.get('/islands', function(req, res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('islands')
 });
 
@@ -105,46 +114,70 @@ app.post('/registration', function(req, res){
 });
 
 app.get('/searchresults', function(req, res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('searchresults')
 });
 
-app.get('/wanttogo', async function(req, res) {
-    if (!req.session.user) {
-       return res.redirect('/');
-    }
+app.get('/wanttogo', function(req, res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+  }
 
-    const user = await collection.findOne({ username: req.session.user });
+  const username = req.session.user;
 
-    res.render('wanttogo', {
-        destinations: user.destinations || []
+  db.collection("myCollection").findOne({username: username}).then(result => {
+      res.render('wanttogo', {
+        destinations: result.destinations || []
     });
+  });
+
 });
 
 //Category Page gets 
 //gets from cities
 app.get('/paris', function(req,res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('paris', {error: null, success: null});
 })
 
 app.get('/rome', function(req,res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('rome', {error: null, success: null});
 })
 
 //gets from hiking
 app.get('/inca', function(req,res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('inca', {error: null, success: null});
 })
 
 app.get('/annapurna', function(req,res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('annapurna', {error: null, success: null});
 })
 
 //gets from islands
 app.get('/bali', function(req,res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('bali', {error: null, success: null});
 })
 
 app.get('/santorini', function(req,res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('santorini', {error: null, success: null});
 })
 
@@ -152,10 +185,16 @@ app.get('/santorini', function(req,res){
 const destinations = ["rome","paris","inca","annapurna","bali","santorini"];
 
 app.get('/searchresults', function(req,res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   res.render('searchresults');
 })
 
 app.post('/search', function(req,res){
+  if (!req.session.user) {
+       return res.render('login', { error: "Please Login first", success: null });
+    }
   var x = req.body.Search;
 
   if (!x || x.trim()===""){
