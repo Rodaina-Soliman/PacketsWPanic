@@ -13,6 +13,21 @@
             text-align: center;
             -webkit-text-stroke: 1px blue;
         }
+        .destinations-container {
+            position: relative;
+            top: 120px;
+            left: 50px;
+        }
+
+        .destination {
+            position: absolute;
+            text-align: center;
+            color: white;
+        }
+
+        .destination label {
+            -webkit-text-stroke: 0.5px black;
+        }
         .back-button-container {
             position: fixed;
             bottom: 50px;
@@ -47,6 +62,29 @@
             <a href="/login" class="btn btn-outline-primary my-2 my-sm-0 ml-2">Log Out</a>
         </div>
     </nav>
+    <div class="destinations-container">
+
+    <% if (destinations.length === 0) { %>
+        <h1>You haven’t added any destinations yet</h1>
+    <% } %>
+
+    <% destinations.forEach((dest, index) => { %>
+        <div class="destination"style="transform: translateX(<%= index * 250 %>px);"> 
+            <img src="/<%= dest %>.png" width="193" height="300">
+            <br>
+            <label class="ml-4 my-2">
+                <%= dest.charAt(0).toUpperCase() + dest.slice(1) %>
+            </label>
+            <br>
+            <button
+                onclick="location.href='/<%= dest %>'"
+                class="btn btn-secondary ml-3">
+                View
+            </button>
+        </div>
+    <% }) %>
+
+</div>
     <div class="back-button-container">
         <a href="home" class="btn btn-secondary ml-3">Home</a>
     </div>
