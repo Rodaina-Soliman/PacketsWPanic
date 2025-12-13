@@ -15,12 +15,12 @@ const mongoUrl = 'mongodb://localhost:27017';
 const client = new MongoClient(mongoUrl);
 const dbName = 'myDB';        
 const collectionName = 'myCollection'; 
-let collection;
+let db;
 async function connectDB() {
     try {
         await client.connect();
         console.log(">>> SUCCESS: Connected to MongoDB <<<");
-        const db = client.db(dbName);
+        db = client.db(dbName);
         collection = db.collection(collectionName);
     } catch (err) {
         console.error("Database Connection Error:", err);
@@ -32,26 +32,6 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
-app.get('/login', function(req, res){
-    res.render('login', { error: null, success: null });
-});
-app.post('/login', async function(req, res) {
-    const { username, password } = req.body;
-
-    try {
-        const user = await collection.findOne({ username, password });
-
-        if (user) {
-            req.session.user = user;
-            return res.redirect('/home');
-        } else {
-            return res.render('login', { error: "Invalid username or password.", success: null });
-        }
-
-    } catch (e) {
-        res.send("Error: " + e.message);
-    }
-    });
 
 app.use(session({
     secret: 'secretKey123',
@@ -81,11 +61,6 @@ app.get('/home', function(req, res){
 app.get('/islands', function(req, res){
   res.render('islands')
 });
-
-app.get('/paris', function(req, res){
-  res.render('paris')
-});
-
 
 app.get('/login', function(req, res){
     res.render('login', { error: null, success: null });
@@ -133,8 +108,16 @@ app.get('/searchresults', function(req, res){
   res.render('searchresults')
 });
 
-app.get('/wanttogo', function(req, res){
-  res.render('wanttogo')
+app.get('/wanttogo', async function(req, res) {
+    if (!req.session.user) {
+       return res.redirect('/');
+    }
+
+    const user = await collection.findOne({ username: req.session.user });
+
+    res.render('wanttogo', {
+        destinations: user.destinations || []
+    });
 });
 
 //Category Page gets 
