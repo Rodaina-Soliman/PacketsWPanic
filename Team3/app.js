@@ -113,9 +113,12 @@ app.get('/wanttogo', function(req, res){
   const username = req.session.user;
 
   db.collection("myCollection").findOne({username: username}).then(result => {
+    const destinations = (result.destinations || [])
+          .filter(dest => typeof dest === 'string')
+      
       res.render('wanttogo', {
-        destinations: result.destinations || []
-    });
+        destinations: destinations
+      });
   });
 
 });
@@ -214,6 +217,21 @@ app.post('/search', function(req,res){
             });
       }
   });
+});
+
+// Remove from want to go list
+app.post('/remove-from-wanttogo', function(req, res) {
+    if (!req.session.user) {
+        return res.render('login', { error: "Please Login first", success: null });
+    }
+    const username = req.session.user;
+    const { destination } = req.body; 
+    db.collection("myCollection").updateOne(
+      { username: username },
+      { $pull: { destinations: destination } }
+      ).then(() => {
+        res.redirect('/wanttogo');
+      });
 });
 
 app.listen(3000);

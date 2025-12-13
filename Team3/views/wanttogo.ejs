@@ -81,6 +81,10 @@
                 class="btn btn-secondary ml-3">
                 View
             </button>
+            <form method="POST" action="/remove-from-wanttogo" style="display: inline;">
+            <input type="hidden" name="destination" value="<%= dest %>">
+            <button type="submit" class="btn btn-danger ml-2">Remove</button>
+        </form>
         </div>
     <% }) %>
 
