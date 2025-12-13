@@ -69,6 +69,7 @@
                     aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+            <a href="/login" class="btn btn-outline-primary my-2 my-sm-0 ml-2">Log Out</a>
         </div>
     </nav>
     <div class="container1">
@@ -79,17 +80,14 @@
     </div>
     <div class="wanttogo">
         <form id="addToWantToGoForm" method="POST" action="/add-to-wanttogo">
-            <input type="hidden" name="username" value="test">
             <input type="hidden" name="destination" value="paris">
+            <% if (error) { %>
+            <p style="color: red; padding-left: 20px;"><%= error %></p> <% } %>
+            <% if (success) { %>
+            <p style="color: green; padding-left: 20px;"><%= success %></p> <% } %>
         <button id="wanttogo" class="btn btn-secondary ml-3">Add to Want-to-Go List</button>
+        <a href="cities" class="btn btn-secondary ml-3">Back</a>
     </div>
-    <script>
-    const shouldShowAlert = '<%= e === "true" ? "true" : "false" %>';
-    const alertMessage = '<%= m || "" %>';
-    if (shouldShowAlert && alertMessage) {
-        alert(alertMessage);
-    }
-</script>
     <div class="video">
         <iframe width="480" height="360" src="https://www.youtube.com/embed/h9DhYS9GNkM" title="Super Simple Paris Travel Guide 2024" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>

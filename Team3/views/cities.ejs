@@ -43,6 +43,12 @@
             position: relative;
             left: 50px;
         }
+        .back-button-container {
+            position: fixed;
+            top: 550px;
+            left: 235px;
+            text-align: center;
+        }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,6 +73,7 @@
                     aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
+            <a href="/login" class="btn btn-outline-primary my-2 my-sm-0 ml-2">Log Out</a>
         </div>
     </nav>
     <div class="container1">
@@ -82,6 +89,9 @@
         <label id ="label2" class="ml-4 my-2">Rome</label>
         <br>
         <button onclick="location.href = '/rome';" id="rome" class="btn btn-secondary ml-3"> View </button>
+    </div>
+    <div class="back-button-container">
+        <a href="home" class="btn btn-secondary ml-3">Back</a>
     </div>
 </body>
 </html>
