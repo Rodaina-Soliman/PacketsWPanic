@@ -1,7 +1,5 @@
 var express = require('express');
 var path = require('path');
-var session = require('express-session'); 
-const { MongoClient } = require('mongodb'); 
 var app = express();
 var session = require('express-session');
 
@@ -11,27 +9,13 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-const mongoUrl = 'mongodb://localhost:27017';
-const client = new MongoClient(mongoUrl);
-const dbName = 'myDB';        
-const collectionName = 'myCollection'; 
-let db;
-async function connectDB() {
-    try {
-        await client.connect();
-        console.log(">>> SUCCESS: Connected to MongoDB <<<");
-        db = client.db(dbName);
-        collection = db.collection(collectionName);
-    } catch (err) {
-        console.error("Database Connection Error:", err);
-    }
-}
-connectDB();
-app.use(session({
-    secret: 'secretKey123',
-    resave: false,
-    saveUninitialized: true
-}));
+
+//Monogodb connection
+
+const { MongoClient } = require('mongodb');
+const client = new MongoClient("mongodb://127.0.0.1:27017");
+client.connect();
+const db = client.db('myDB');
 
 app.use(session({
     secret: 'secretKey123',
@@ -72,6 +56,7 @@ app.get('/islands', function(req, res){
 });
 
 app.get('/login', function(req, res){
+    req.session.user = null;
     res.render('login', { error: null, success: null });
 });
 
@@ -210,6 +195,8 @@ app.post('/search', function(req,res){
   
     }
   );
+
+  //Add to want to go list
 
   app.post('/add-to-wanttogo', function(req,res){
     const username = req.session.user;
